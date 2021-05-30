@@ -4,39 +4,6 @@ services:
   mybroker:
     image: 'rabbitmq:3-alpine'
 
-  myredis:
-    image: 'redis:alpine'
-
-  mypg:
-    image: 'postgres:alpine'
-    environment:
-      - POSTGRES_PASSWORD=mysecretpass
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-    volumes: 
-      - ./pgdata:/var/lib/postgresql/data
-
-  myapi:
-    restart: always
-    build:
-      dockerfile: Dockerfile
-      context: ./mybackend
-    command:
-      sh -c "node index.js"
-    volumes:
-      - /opt/app/node_modules
-      - ./mybackend:/opt/app
-    environment:
-      - POSTGRES_PASSWORD=mysecretpass
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_HOST=mypg
-      - POSTGRES_PORT=5432
-      - REDIS_HOST=myredis
-      - REDIS_PORT=6379
-    ports:
-      - "5000:5000"
-
   myimageuploader:
     restart: always
     build:
